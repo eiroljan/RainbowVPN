@@ -1,0 +1,52 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "VPN",
+  "getStarted": "Get Started",
+  "alreadyHaveAccount": "Already have an account? ",
+  "signIn": "Sign in",
+  "welcomeTagline": "Login now to access faster internet in\nmore than 120+ location",
+
+  "loginTitle": "Sign In",
+  "loginSubtitle": "Welcome back! Login to continue\nyour secure VPN experience.",
+  "emailHint": "Email address",
+  "passwordHint": "Password",
+  "forgotPassword": "Forgot password?",
+  "login": "Login",
+  "noAccount": "Don't have an account? ",
+  "signUp": "Sign up",
+
+  "serverLocation": "Server Location",
+  "selectServer": "Select Server",
+  "download": "Download",
+  "upload": "Upload",
+  "noLogPolicy": "No-Log Policy",
+  "ultraFast": "Ultra Fast",
+  "aes256": "AES-256",
+
+  "statusConnected": "Connected",
+  "statusConnecting": "Connecting...",
+  "statusAuthenticating": "Authenticating...",
+  "statusDisconnecting": "Disconnecting...",
+  "statusPermissionDenied": "Permission Denied",
+  "statusError": "Error",
+  "statusNotConnected": "Not Connected",
+
+  "navHome": "Home",
+  "navServers": "Servers",
+  "navStats": "Stats",
+  "navSettings": "Settings",
+
+  "errorVpnPermissionDenied": "VPN permission denied. Please grant the VPN permission.",
+  "errorVpnConnection": "VPN connection error. Check your .ovpn config.",
+  "errorLoadConfig": "Failed to load VPN config: ",
+
+  "countryUnitedStates": "United States",
+  "countryUnitedKingdom": "United Kingdom",
+  "countryGermany": "Germany",
+  "countryJapan": "Japan",
+  "countrySingapore": "Singapore",
+  "countryAustralia": "Australia",
+  "countryCanada": "Canada",
+  "countryNetherlands": "Netherlands"
+}

@@ -1,0 +1,52 @@
+{
+  "@@locale": "zh",
+
+  "appTitle": "VPN",
+  "getStarted": "立即开始",
+  "alreadyHaveAccount": "已有账户？",
+  "signIn": "登录",
+  "welcomeTagline": "立即登录，畅享120+地区\n更快速的网络体验",
+
+  "loginTitle": "登录",
+  "loginSubtitle": "欢迎回来！登录后继续\n您的安全VPN体验。",
+  "emailHint": "邮箱地址",
+  "passwordHint": "密码",
+  "forgotPassword": "忘记密码？",
+  "login": "登录",
+  "noAccount": "还没有账户？",
+  "signUp": "注册",
+
+  "serverLocation": "服务器位置",
+  "selectServer": "选择服务器",
+  "download": "下载",
+  "upload": "上传",
+  "noLogPolicy": "无日志政策",
+  "ultraFast": "超高速",
+  "aes256": "AES-256加密",
+
+  "statusConnected": "已连接",
+  "statusConnecting": "连接中...",
+  "statusAuthenticating": "认证中...",
+  "statusDisconnecting": "断开中...",
+  "statusPermissionDenied": "权限被拒绝",
+  "statusError": "错误",
+  "statusNotConnected": "未连接",
+
+  "navHome": "主页",
+  "navServers": "服务器",
+  "navStats": "统计",
+  "navSettings": "设置",
+
+  "errorVpnPermissionDenied": "VPN权限被拒绝，请授予VPN权限。",
+  "errorVpnConnection": "VPN连接错误，请检查您的.ovpn配置。",
+  "errorLoadConfig": "加载VPN配置失败：",
+
+  "countryUnitedStates": "美国",
+  "countryUnitedKingdom": "英国",
+  "countryGermany": "德国",
+  "countryJapan": "日本",
+  "countrySingapore": "新加坡",
+  "countryAustralia": "澳大利亚",
+  "countryCanada": "加拿大",
+  "countryNetherlands": "荷兰"
+}
