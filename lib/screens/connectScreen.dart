@@ -10,6 +10,7 @@ import 'package:vpn_app/services/notification_service.dart';
 import 'package:vpn_app/services/auth_service.dart';
 import 'package:vpn_app/screens/welcomeScreen.dart';
 import 'package:vpn_app/screens/subscribeScreen.dart';
+import 'package:vpn_app/screens/settingsScreen.dart';
 
 class ConnectScreen extends StatefulWidget {
   const ConnectScreen({super.key});
@@ -468,8 +469,15 @@ class _ConnectScreenState extends State<ConnectScreen>
                 'Settings',
                 style: TextStyle(color: Colors.white),
               ),
-              onTap: () {
+              onTap: () async {
                 Navigator.pop(context);
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => const SettingsScreen()),
+                );
+                // Refresh plan badge if subscription changed in settings
+                if (mounted) _loadSubscription();
               },
             ),
             const Divider(color: Colors.white12, indent: 16, endIndent: 16),
@@ -593,17 +601,12 @@ class _ConnectScreenState extends State<ConnectScreen>
                       ),
                       Row(
                         children: [
-                          Container(
+                          SizedBox(
                             width: 36,
                             height: 36,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF1B2160),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Icon(
-                              Icons.flash_on,
-                              color: Colors.white,
-                              size: 20,
+                            child: Image.asset(
+                              'assets/logo/vpnlogo.png',
+                              fit: BoxFit.contain,
                             ),
                           ),
                           const SizedBox(width: 8),

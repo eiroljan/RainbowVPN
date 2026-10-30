@@ -9,12 +9,13 @@ import 'package:vpn_app/services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   await Supabase.initialize(
     url: 'https://hxbltzcbvumeiqcnnciw.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4Ymx0emNidnVtZWlxY25uY2l3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzMzQxODUsImV4cCI6MjEwMTkxMDE4NX0.9ll87OxDwUVlq82q1DEobPejH8zgd8Zt3ooYGe8vqH8',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4Ymx0emNidnVtZWlxY25uY2l3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzMzQxODUsImV4cCI6MjEwMTkxMDE4NX0.9ll87OxDwUVlq82q1DEobPejH8zgd8Zt3ooYGe8vqH8',
   );
-  
+
   await NotificationService.initialize();
   runApp(const MyApp());
 }
@@ -38,6 +39,7 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Rainbow Brother VPN',
       debugShowCheckedModeBanner: false,
       locale: _locale,
       supportedLocales: const [
@@ -105,10 +107,8 @@ class _SplashScreenState extends State<SplashScreen>
       PageRouteBuilder(
         pageBuilder: (_, __, ___) =>
             loggedIn ? const ConnectScreen() : const WelcomeScreen(),
-        transitionsBuilder: (_, animation, __, child) => FadeTransition(
-          opacity: animation,
-          child: child,
-        ),
+        transitionsBuilder: (_, animation, __, child) =>
+            FadeTransition(opacity: animation, child: child),
         transitionDuration: const Duration(milliseconds: 400),
       ),
     );
@@ -127,7 +127,10 @@ class _SplashScreenState extends State<SplashScreen>
             child: Transform.rotate(
               angle: -0.3,
               child: Container(
-                  width: 220, height: 450, color: const Color(0xFF5C3BFF)),
+                width: 220,
+                height: 450,
+                color: const Color(0xFF5C3BFF),
+              ),
             ),
           ),
           Positioned(
@@ -136,7 +139,10 @@ class _SplashScreenState extends State<SplashScreen>
             child: Transform.rotate(
               angle: 0.1,
               child: Container(
-                  width: 180, height: 300, color: const Color(0xFF6A40FF)),
+                width: 180,
+                height: 300,
+                color: const Color(0xFF6A40FF),
+              ),
             ),
           ),
           Positioned(
@@ -144,8 +150,7 @@ class _SplashScreenState extends State<SplashScreen>
             right: -50,
             child: Transform.rotate(
               angle: -0.4,
-              child: Container(
-                  width: 180, height: 300, color: const Color(0xFF182056)),
+              child: Container(width: 180, height: 300),
             ),
           ),
 
@@ -156,27 +161,19 @@ class _SplashScreenState extends State<SplashScreen>
               children: [
                 ScaleTransition(
                   scale: _pulseAnim,
-                  child: Container(
-                    width: 90,
-                    height: 90,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1B2160),
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFF5C3BFF).withOpacity(0.5),
-                          blurRadius: 32,
-                          spreadRadius: 4,
-                        ),
-                      ],
+                  child: SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: Image.asset(
+                      'assets/logo/vpnlogo.png',
+                      fit: BoxFit.contain,
                     ),
-                    child: const Icon(Icons.flash_on,
-                        color: Colors.white, size: 45),
                   ),
                 ),
                 const SizedBox(height: 28),
                 const Text(
-                  'FlashVPN',
+                  'RB VPN',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 32,

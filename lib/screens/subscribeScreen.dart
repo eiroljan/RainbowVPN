@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vpn_app/screens/paymentSheet.dart';
 import 'package:vpn_app/services/auth_service.dart';
 
 class SubscribeScreen extends StatefulWidget {
@@ -66,6 +67,25 @@ class _SubscribeScreenState extends State<SubscribeScreen>
 
   Future<void> _subscribe(dynamic planId) async {
     final idStr = planId.toString();
+
+    // Find the plan to check its price
+    final plan = _plans.firstWhere(
+      (p) => p['id']?.toString() == idStr,
+      orElse: () => {},
+    );
+    final price = double.tryParse(plan['price']?.toString() ?? '0') ?? 0;
+    final planName = plan['name']?.toString() ?? 'Plan';
+
+    // For paid plans, show the card payment sheet first
+    if (price > 0) {
+      final paid = await showPaymentSheet(
+        context,
+        amount: price,
+        planName: planName,
+      );
+      if (!paid || !mounted) return; // User dismissed without paying
+    }
+
     setState(() => _processingPlanId = idStr);
     try {
       final parsedId = int.tryParse(idStr) ?? 0;

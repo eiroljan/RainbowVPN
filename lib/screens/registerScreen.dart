@@ -1,6 +1,7 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:vpn_app/l10n/app_localizations.dart';
 import 'package:vpn_app/main.dart';
+import 'package:vpn_app/screens/paymentSheet.dart';
 import 'package:vpn_app/services/auth_service.dart';
 import 'package:vpn_app/screens/connectScreen.dart';
 
@@ -165,10 +166,16 @@ class _RegisterScreenState extends State<RegisterScreen>
     );
     final price =
         double.tryParse(selected['price']?.toString() ?? '0') ?? 0;
+    final planName = selected['name']?.toString() ?? 'Plan';
 
-    if (price == 0) {
-      _goToApp();
-      return;
+    // Show card payment sheet for paid plans
+    if (price > 0) {
+      final paid = await showPaymentSheet(
+        context,
+        amount: price,
+        planName: planName,
+      );
+      if (!paid || !mounted) return; // User dismissed — stay on step 2
     }
 
     setState(() => _subscribing = true);
@@ -283,19 +290,13 @@ class _RegisterScreenState extends State<RegisterScreen>
         children: [
           const SizedBox(height: 16),
           Center(
-            child: Container(
-              width: 80, height: 80,
-              decoration: BoxDecoration(
-                color: const Color(0xFF1B2160),
-                borderRadius: BorderRadius.circular(22),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF5C3BFF).withOpacity(0.4),
-                    blurRadius: 24, spreadRadius: 2,
-                  ),
-                ],
+            child: SizedBox(
+              width: 90,
+              height: 90,
+              child: Image.asset(
+                'assets/logo/vpnlogo.png',
+                fit: BoxFit.contain,
               ),
-              child: const Icon(Icons.flash_on, color: Colors.white, size: 42),
             ),
           ),
           const SizedBox(height: 20),

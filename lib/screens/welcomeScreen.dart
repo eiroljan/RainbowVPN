@@ -72,17 +72,12 @@ class WelcomeScreen extends StatelessWidget {
                   const Spacer(),
 
                   /// Logo container
-                  Container(
-                    width: 90,
-                    height: 90,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1B2160),
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: const Icon(
-                      Icons.flash_on,
-                      color: Colors.white,
-                      size: 45,
+                  SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: Image.asset(
+                      'assets/logo/vpnlogo.png',
+                      fit: BoxFit.contain,
                     ),
                   ),
 

@@ -1,6 +1,6 @@
 {
-    "name": "vpn_app",
-    "short_name": "vpn_app",
+    "name": "Rainbow Brother VPN",
+    "short_name": "Rainbow Brother VPN",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

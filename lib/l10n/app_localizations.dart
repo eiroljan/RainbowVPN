@@ -20,7 +20,7 @@ class AppLocalizations {
 
   static const Map<String, Map<String, String>> _strings = {
     'en': {
-      'appTitle': 'VPN',
+      'appTitle': 'RB VPN',
       'getStarted': 'Get Started',
       'alreadyHaveAccount': 'Already have an account? ',
       'signIn': 'Sign in',
@@ -38,7 +38,8 @@ class AppLocalizations {
       'signUp': 'Sign up',
 
       'signUpTitle': 'Create Account',
-      'signUpSubtitle': 'Sign up to get started with\nyour secure VPN experience.',
+      'signUpSubtitle':
+          'Sign up to get started with\nyour secure VPN experience.',
       'nameHint': 'Full name',
 
       'serverLocation': 'Server Location',
@@ -65,8 +66,7 @@ class AppLocalizations {
 
       'errorVpnPermissionDenied':
           'VPN permission denied. Please grant the VPN permission.',
-      'errorVpnConnection':
-          'VPN connection error. Check your .ovpn config.',
+      'errorVpnConnection': 'VPN connection error. Check your .ovpn config.',
       'errorLoadConfig': 'Failed to load VPN config: ',
 
       'countryUnitedStates': 'United States',
@@ -79,7 +79,7 @@ class AppLocalizations {
       'countryNetherlands': 'Netherlands',
     },
     'zh': {
-      'appTitle': 'VPN',
+      'appTitle': 'RB VPN',
       'getStarted': '立即开始',
       'alreadyHaveAccount': '已有账户？',
       'signIn': '登录',
@@ -158,9 +158,9 @@ class AppLocalizations {
   String get login => _t('login');
   String get noAccount => _t('noAccount');
   String get signUp => _t('signUp');
-    String get signUpTitle => _t('signUpTitle');
-    String get signUpSubtitle => _t('signUpSubtitle');
-    String get nameHint => _t('nameHint');
+  String get signUpTitle => _t('signUpTitle');
+  String get signUpSubtitle => _t('signUpSubtitle');
+  String get nameHint => _t('nameHint');
 
   String get serverLocation => _t('serverLocation');
   String get selectServer => _t('selectServer');
@@ -205,8 +205,7 @@ class _AppLocalizationsDelegate
   const _AppLocalizationsDelegate();
 
   @override
-  bool isSupported(Locale locale) =>
-      ['en', 'zh'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => ['en', 'zh'].contains(locale.languageCode);
 
   @override
   Future<AppLocalizations> load(Locale locale) async =>

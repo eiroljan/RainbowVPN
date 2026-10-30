@@ -53,7 +53,7 @@ class VpnService {
   void initialize({
     String groupIdentifier = 'group.com.example.vpn_app',
     String providerBundleIdentifier = 'com.example.vpn_app.VPNExtension',
-    String localizedDescription = 'VPN App',
+    String localizedDescription = 'Rainbow Brother VPN',
   }) {
     if (_initialized) return;
 

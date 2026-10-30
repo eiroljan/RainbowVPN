@@ -9,13 +9,10 @@ class NotificationService {
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    const InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-    );
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
 
-    await _notificationsPlugin.initialize(
-      settings: initializationSettings,
-    );
+    await _notificationsPlugin.initialize(settings: initializationSettings);
   }
 
   static Future<void> showVpnNotification({
@@ -25,18 +22,19 @@ class NotificationService {
   }) async {
     final AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-      'vpn_connection_channel',
-      'VPN Connection Status',
-      channelDescription: 'Notifications for VPN connection status updates',
-      importance: Importance.max,
-      priority: Priority.high,
-      usesChronometer: isConnected,
-      ongoing: isConnected,
-      autoCancel: !isConnected,
-    );
+          'vpn_connection_channel',
+          'VPN Connection Status',
+          channelDescription: 'Notifications for VPN connection status updates',
+          importance: Importance.max,
+          priority: Priority.high,
+          usesChronometer: isConnected,
+          ongoing: isConnected,
+          autoCancel: !isConnected,
+        );
 
-    final NotificationDetails notificationDetails =
-        NotificationDetails(android: androidNotificationDetails);
+    final NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
+    );
 
     try {
       await _notificationsPlugin.show(
