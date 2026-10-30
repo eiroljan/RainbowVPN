@@ -11,6 +11,7 @@ import 'package:vpn_app/services/auth_service.dart';
 import 'package:vpn_app/screens/welcomeScreen.dart';
 import 'package:vpn_app/screens/subscribeScreen.dart';
 import 'package:vpn_app/screens/settingsScreen.dart';
+import 'package:vpn_app/services/settings_service.dart';
 
 class ConnectScreen extends StatefulWidget {
   const ConnectScreen({super.key});
@@ -164,8 +165,8 @@ class _ConnectScreenState extends State<ConnectScreen>
       final sub = result['subscription'] as Map<String, dynamic>?;
       if (sub != null) {
         final plan = sub['plan'] as Map<String, dynamic>?;
-        final planName = plan?['name'] as String? ??
-            sub['plan_name'] as String?;
+        final planName =
+            plan?['name'] as String? ?? sub['plan_name'] as String?;
         if (mounted && planName != null) {
           setState(() => _currentPlanName = planName);
         }
@@ -175,9 +176,11 @@ class _ConnectScreenState extends State<ConnectScreen>
     } catch (_) {
       // keep default 'Free Plan'
     }
-    if (mounted) setState(() {
-      // trigger rebuild with name/email
-    });
+    if (mounted) {
+      setState(() {
+        // trigger rebuild with name/email
+      });
+    }
   }
 
   void _initVpnService() {
@@ -400,7 +403,7 @@ class _ConnectScreenState extends State<ConnectScreen>
                     height: 56,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0.15),
+                      color: Colors.white.withValues(alpha: 0.15),
                       border: Border.all(color: Colors.white38, width: 2),
                     ),
                     child: const Icon(
@@ -411,7 +414,7 @@ class _ConnectScreenState extends State<ConnectScreen>
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    _userName ?? _userEmail ?? 'VPN User',
+                    _userName ?? _userEmail ?? l.drawerUser,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -421,7 +424,9 @@ class _ConnectScreenState extends State<ConnectScreen>
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    _currentPlanName,
+                    _currentPlanName == 'Free Plan'
+                        ? l.drawerFreePlan
+                        : _currentPlanName,
                     style: const TextStyle(color: Colors.white60, fontSize: 13),
                   ),
                 ],
@@ -432,23 +437,24 @@ class _ConnectScreenState extends State<ConnectScreen>
                 Icons.person_outline,
                 color: Color(0xFF00E5A0),
               ),
-              title: const Text(
-                'Profile',
-                style: TextStyle(color: Colors.white),
+              title: Text(
+                l.drawerProfile,
+                style: const TextStyle(color: Colors.white),
               ),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pop(context); // close drawer
+                Navigator.pushNamed(context, '/profile');
               },
             ),
             ListTile(
               leading: const Icon(Icons.star_rounded, color: Color(0xFFFFB800)),
-              title: const Text(
-                'Subscribe',
-                style: TextStyle(color: Colors.white),
+              title: Text(
+                l.drawerSubscribe,
+                style: const TextStyle(color: Colors.white),
               ),
-              subtitle: const Text(
-                'Upgrade your plan',
-                style: TextStyle(color: Colors.white38, fontSize: 12),
+              subtitle: Text(
+                l.drawerUpgradePlan,
+                style: const TextStyle(color: Colors.white38, fontSize: 12),
               ),
               onTap: () async {
                 Navigator.pop(context);
@@ -465,16 +471,15 @@ class _ConnectScreenState extends State<ConnectScreen>
                 Icons.settings_outlined,
                 color: Color(0xFF5C3BFF),
               ),
-              title: const Text(
-                'Settings',
-                style: TextStyle(color: Colors.white),
+              title: Text(
+                l.drawerSettings,
+                style: const TextStyle(color: Colors.white),
               ),
               onTap: () async {
                 Navigator.pop(context);
                 await Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (_) => const SettingsScreen()),
+                  MaterialPageRoute(builder: (_) => const SettingsScreen()),
                 );
                 // Refresh plan badge if subscription changed in settings
                 if (mounted) _loadSubscription();
@@ -483,16 +488,19 @@ class _ConnectScreenState extends State<ConnectScreen>
             const Divider(color: Colors.white12, indent: 16, endIndent: 16),
             ListTile(
               leading: const Icon(Icons.info_outline, color: Colors.white54),
-              title: const Text('About', style: TextStyle(color: Colors.white)),
+              title: Text(
+                l.drawerAbout,
+                style: const TextStyle(color: Colors.white),
+              ),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
             ListTile(
               leading: const Icon(Icons.help_outline, color: Colors.white54),
-              title: const Text(
-                'Help & Support',
-                style: TextStyle(color: Colors.white),
+              title: Text(
+                l.drawerHelpSupport,
+                style: const TextStyle(color: Colors.white),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -500,9 +508,9 @@ class _ConnectScreenState extends State<ConnectScreen>
             ),
             ListTile(
               leading: const Icon(Icons.share_outlined, color: Colors.white54),
-              title: const Text(
-                'Share App',
-                style: TextStyle(color: Colors.white),
+              title: Text(
+                l.drawerShareApp,
+                style: const TextStyle(color: Colors.white),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -514,9 +522,9 @@ class _ConnectScreenState extends State<ConnectScreen>
                 Icons.logout_rounded,
                 color: Color(0xFFFF5C5C),
               ),
-              title: const Text(
-                'Logout',
-                style: TextStyle(
+              title: Text(
+                l.drawerLogout,
+                style: const TextStyle(
                   color: Color(0xFFFF5C5C),
                   fontWeight: FontWeight.w600,
                 ),
@@ -658,7 +666,7 @@ class _ConnectScreenState extends State<ConnectScreen>
                               vertical: 10,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.1),
+                              color: Colors.white.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(color: Colors.white24),
                             ),
@@ -671,7 +679,7 @@ class _ConnectScreenState extends State<ConnectScreen>
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  _selectedServer.country,
+                                  _selectedServer.localizedCountry(l),
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500,
@@ -700,12 +708,14 @@ class _ConnectScreenState extends State<ConnectScreen>
                               // Outer rotating dashed ring
                               AnimatedBuilder(
                                 animation: _rotateController,
-                                builder: (_, __) => Transform.rotate(
+                                builder: (_, _) => Transform.rotate(
                                   angle: _rotateController.value * 2 * math.pi,
                                   child: CustomPaint(
                                     size: const Size(240, 240),
                                     painter: _DashedCirclePainter(
-                                      color: activeColor.withOpacity(0.25),
+                                      color: activeColor.withValues(
+                                        alpha: 0.25,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -715,7 +725,7 @@ class _ConnectScreenState extends State<ConnectScreen>
                               if (_isConnected || _isConnecting) ...[
                                 AnimatedBuilder(
                                   animation: _pulse3,
-                                  builder: (_, __) => Transform.scale(
+                                  builder: (_, _) => Transform.scale(
                                     scale: _pulse3.value,
                                     child: Container(
                                       width: 196,
@@ -723,7 +733,9 @@ class _ConnectScreenState extends State<ConnectScreen>
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         border: Border.all(
-                                          color: activeColor.withOpacity(0.08),
+                                          color: activeColor.withValues(
+                                            alpha: 0.08,
+                                          ),
                                           width: 14,
                                         ),
                                       ),
@@ -732,7 +744,7 @@ class _ConnectScreenState extends State<ConnectScreen>
                                 ),
                                 AnimatedBuilder(
                                   animation: _pulse2,
-                                  builder: (_, __) => Transform.scale(
+                                  builder: (_, _) => Transform.scale(
                                     scale: _pulse2.value,
                                     child: Container(
                                       width: 172,
@@ -740,7 +752,9 @@ class _ConnectScreenState extends State<ConnectScreen>
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         border: Border.all(
-                                          color: activeColor.withOpacity(0.15),
+                                          color: activeColor.withValues(
+                                            alpha: 0.15,
+                                          ),
                                           width: 10,
                                         ),
                                       ),
@@ -749,7 +763,7 @@ class _ConnectScreenState extends State<ConnectScreen>
                                 ),
                                 AnimatedBuilder(
                                   animation: _pulse1,
-                                  builder: (_, __) => Transform.scale(
+                                  builder: (_, _) => Transform.scale(
                                     scale: _pulse1.value,
                                     child: Container(
                                       width: 148,
@@ -757,7 +771,9 @@ class _ConnectScreenState extends State<ConnectScreen>
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         border: Border.all(
-                                          color: activeColor.withOpacity(0.25),
+                                          color: activeColor.withValues(
+                                            alpha: 0.25,
+                                          ),
                                           width: 6,
                                         ),
                                       ),
@@ -781,14 +797,14 @@ class _ConnectScreenState extends State<ConnectScreen>
                                           ? [
                                               const Color(
                                                 0xFF00E5A0,
-                                              ).withOpacity(0.9),
+                                              ).withValues(alpha: 0.9),
                                               const Color(0xFF007A56),
                                             ]
                                           : _isConnecting
                                           ? [
                                               const Color(
                                                 0xFFFFB800,
-                                              ).withOpacity(0.9),
+                                              ).withValues(alpha: 0.9),
                                               const Color(0xFF7A5700),
                                             ]
                                           : [
@@ -798,7 +814,9 @@ class _ConnectScreenState extends State<ConnectScreen>
                                     ),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: activeColor.withOpacity(0.35),
+                                        color: activeColor.withValues(
+                                          alpha: 0.35,
+                                        ),
                                         blurRadius: 30,
                                         spreadRadius: 4,
                                       ),
@@ -1003,7 +1021,9 @@ class _StatCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF1B2160),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF5C3BFF).withOpacity(0.25)),
+        border: Border.all(
+          color: const Color(0xFF5C3BFF).withValues(alpha: 0.25),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1013,7 +1033,7 @@ class _StatCard extends StatelessWidget {
             width: 28,
             height: 28,
             decoration: BoxDecoration(
-              color: iconColor.withOpacity(0.15),
+              color: iconColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(7),
             ),
             child: Icon(icon, color: iconColor, size: 16),
@@ -1042,7 +1062,6 @@ class _StatCard extends StatelessWidget {
   }
 }
 
-
 // ─────────────────────────────────────────────
 // Feature tile
 // ─────────────────────────────────────────────
@@ -1059,7 +1078,9 @@ class _FeatureTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF1B2160),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF5C3BFF).withOpacity(0.2)),
+        border: Border.all(
+          color: const Color(0xFF5C3BFF).withValues(alpha: 0.2),
+        ),
       ),
       child: Column(
         children: [
@@ -1143,13 +1164,13 @@ class _ServerSheet extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? const Color(0xFF5C3BFF).withOpacity(0.25)
+                          ? const Color(0xFF5C3BFF).withValues(alpha: 0.25)
                           : const Color(0xFF1B2160),
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
                         color: isSelected
                             ? const Color(0xFF5C3BFF)
-                            : const Color(0xFF5C3BFF).withOpacity(0.15),
+                            : const Color(0xFF5C3BFF).withValues(alpha: 0.15),
                       ),
                     ),
                     child: Row(
@@ -1175,7 +1196,9 @@ class _ServerSheet extends StatelessWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF00E5A0).withOpacity(0.15),
+                            color: const Color(
+                              0xFF00E5A0,
+                            ).withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
@@ -1220,9 +1243,11 @@ class _ConnectLanguageToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        final newLang = isZh ? 'en' : 'zh';
+        SettingsService.setString(SettingsService.languageKey, newLang);
         MyApp.of(
           context,
-        ).setLocale(isZh ? const Locale('en') : const Locale('zh'));
+        ).setLocale(Locale(newLang));
       },
       child: Container(
         height: 44,
@@ -1230,7 +1255,9 @@ class _ConnectLanguageToggle extends StatelessWidget {
         decoration: BoxDecoration(
           color: const Color(0xFF1B2160),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFF5C3BFF).withOpacity(0.4)),
+          border: Border.all(
+            color: const Color(0xFF5C3BFF).withValues(alpha: 0.4),
+          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vpn_app/l10n/app_localizations.dart';
 import 'package:vpn_app/main.dart';
 import 'package:vpn_app/screens/loginScreen.dart';
+import 'package:vpn_app/services/settings_service.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -59,8 +60,7 @@ class WelcomeScreen extends StatelessWidget {
 
           SafeArea(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
               child: Column(
                 children: [
                   // ── Language toggle ──────────────────────────────────────
@@ -97,8 +97,7 @@ class WelcomeScreen extends StatelessWidget {
                   Text(
                     l.welcomeTagline,
                     textAlign: TextAlign.center,
-                    style:
-                        const TextStyle(color: Colors.white, fontSize: 16),
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
                   ),
 
                   const Spacer(),
@@ -138,15 +137,15 @@ class WelcomeScreen extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => const LoginScreen(),
-                        ),
+                        MaterialPageRoute(builder: (_) => const LoginScreen()),
                       );
                     },
                     child: RichText(
                       text: TextSpan(
                         style: const TextStyle(
-                            color: Colors.white70, fontSize: 15),
+                          color: Colors.white70,
+                          fontSize: 15,
+                        ),
                         children: [
                           TextSpan(text: l.alreadyHaveAccount),
                           TextSpan(
@@ -184,19 +183,20 @@ class _LanguageToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        MyApp.of(context).setLocale(
-          isZh ? const Locale('en') : const Locale('zh'),
-        );
+        final newLang = isZh ? 'en' : 'zh';
+        SettingsService.setString(SettingsService.languageKey, newLang);
+        MyApp.of(
+          context,
+        ).setLocale(Locale(newLang));
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        padding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
         decoration: BoxDecoration(
           color: const Color(0xFF1B2160),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: const Color(0xFF5C3BFF).withOpacity(0.5),
+            color: const Color(0xFF5C3BFF).withValues(alpha: 0.5),
           ),
         ),
         child: Row(
@@ -212,8 +212,7 @@ class _LanguageToggle extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 6),
-            const Icon(Icons.language_rounded,
-                color: Colors.white70, size: 16),
+            const Icon(Icons.language_rounded, color: Colors.white70, size: 16),
           ],
         ),
       ),

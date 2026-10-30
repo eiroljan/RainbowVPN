@@ -34,6 +34,8 @@ class VpnServerModel {
       case 'countryAustralia': return l.countryAustralia;
       case 'countryCanada': return l.countryCanada;
       case 'countryNetherlands': return l.countryNetherlands;
+      case 'countryMalaysia':
+      case 'adminServer': return l.countryMalaysia;
       default: return country;
     }
   }

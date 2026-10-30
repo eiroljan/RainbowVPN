@@ -4,6 +4,7 @@ import 'package:vpn_app/main.dart';
 import 'package:vpn_app/screens/paymentSheet.dart';
 import 'package:vpn_app/services/auth_service.dart';
 import 'package:vpn_app/screens/connectScreen.dart';
+import 'package:vpn_app/services/settings_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -60,8 +61,9 @@ class _RegisterScreenState extends State<RegisterScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg, style: const TextStyle(color: Colors.white)),
-        backgroundColor:
-            success ? const Color(0xFF1A3A2A) : const Color(0xFF3A1A1A),
+        backgroundColor: success
+            ? const Color(0xFF1A3A2A)
+            : const Color(0xFF3A1A1A),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
@@ -83,7 +85,7 @@ class _RegisterScreenState extends State<RegisterScreen>
   Widget _shimmerBox({required double height, double radius = 12}) {
     return AnimatedBuilder(
       animation: _shimmerController,
-      builder: (_, __) => Container(
+      builder: (_, _) => Container(
         height: height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(radius),
@@ -120,18 +122,24 @@ class _RegisterScreenState extends State<RegisterScreen>
 
     setState(() => _isRegistering = true);
     final result = await AuthService.register(
-        name: name, email: email, password: password);
+      name: name,
+      email: email,
+      password: password,
+    );
     if (!mounted) return;
     setState(() => _isRegistering = false);
 
     if (result.containsKey('token')) {
       _fetchPlans();
       setState(() => _currentStep = 1);
-      _pageController.animateToPage(1,
-          duration: const Duration(milliseconds: 400),
-          curve: Curves.easeInOut);
+      _pageController.animateToPage(
+        1,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
     } else {
-      final errorMsg = result['message'] ??
+      final errorMsg =
+          result['message'] ??
           (result['errors'] != null
               ? result['errors'].values.first[0]
               : 'Registration failed');
@@ -164,8 +172,7 @@ class _RegisterScreenState extends State<RegisterScreen>
       (p) => p['id']?.toString() == _selectedPlanId,
       orElse: () => {},
     );
-    final price =
-        double.tryParse(selected['price']?.toString() ?? '0') ?? 0;
+    final price = double.tryParse(selected['price']?.toString() ?? '0') ?? 0;
     final planName = selected['name']?.toString() ?? 'Plan';
 
     // Show card payment sheet for paid plans
@@ -187,7 +194,9 @@ class _RegisterScreenState extends State<RegisterScreen>
     if (result.containsKey('subscription')) {
       _showSnack('🎉 ${result['message'] ?? 'Subscribed!'}', success: true);
     } else {
-      _showSnack(result['message'] ?? 'Could not subscribe, you can do it later.');
+      _showSnack(
+        result['message'] ?? 'Could not subscribe, you can do it later.',
+      );
     }
     _goToApp();
   }
@@ -212,37 +221,66 @@ class _RegisterScreenState extends State<RegisterScreen>
       body: Stack(
         children: [
           Positioned(
-            top: -100, left: -80,
-            child: Transform.rotate(angle: -0.3,
-              child: Container(width: 220, height: 450, color: const Color(0xFF5C3BFF))),
+            top: -100,
+            left: -80,
+            child: Transform.rotate(
+              angle: -0.3,
+              child: Container(
+                width: 220,
+                height: 450,
+                color: const Color(0xFF5C3BFF),
+              ),
+            ),
           ),
           Positioned(
-            top: -50, right: -70,
-            child: Transform.rotate(angle: 0.1,
-              child: Container(width: 180, height: 300, color: const Color(0xFF6A40FF))),
+            top: -50,
+            right: -70,
+            child: Transform.rotate(
+              angle: 0.1,
+              child: Container(
+                width: 180,
+                height: 300,
+                color: const Color(0xFF6A40FF),
+              ),
+            ),
           ),
           Positioned(
-            bottom: -100, right: -50,
-            child: Transform.rotate(angle: -0.4,
-              child: Container(width: 180, height: 300, color: const Color(0xFF182056))),
+            bottom: -100,
+            right: -50,
+            child: Transform.rotate(
+              angle: -0.4,
+              child: Container(
+                width: 180,
+                height: 300,
+                color: const Color(0xFF182056),
+              ),
+            ),
           ),
           SafeArea(
             child: Column(
               children: [
                 // ── Top bar ──
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 14,
+                  ),
                   child: Row(
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.arrow_back_ios_new_rounded,
-                            color: Colors.white, size: 22),
+                        icon: const Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          color: Colors.white,
+                          size: 22,
+                        ),
                         onPressed: () {
                           if (_currentStep == 1) {
                             setState(() => _currentStep = 0);
-                            _pageController.animateToPage(0,
-                                duration: const Duration(milliseconds: 400),
-                                curve: Curves.easeInOut);
+                            _pageController.animateToPage(
+                              0,
+                              duration: const Duration(milliseconds: 400),
+                              curve: Curves.easeInOut,
+                            );
                           } else {
                             Navigator.pop(context);
                           }
@@ -253,7 +291,9 @@ class _RegisterScreenState extends State<RegisterScreen>
                       const SizedBox(width: 12),
                       Expanded(
                         child: _StepProgressBar(
-                            currentStep: _currentStep, totalSteps: 2),
+                          currentStep: _currentStep,
+                          totalSteps: 2,
+                        ),
                       ),
                       const SizedBox(width: 12),
                       _LanguageToggle(isZh: isZh),
@@ -266,10 +306,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                   child: PageView(
                     controller: _pageController,
                     physics: const NeverScrollableScrollPhysics(),
-                    children: [
-                      _buildStep1(l),
-                      _buildStep2(),
-                    ],
+                    children: [_buildStep1(l), _buildStep2()],
                   ),
                 ),
               ],
@@ -300,25 +337,32 @@ class _RegisterScreenState extends State<RegisterScreen>
             ),
           ),
           const SizedBox(height: 20),
-          Text(l.signUpTitle,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold)),
+          Text(
+            l.signUpTitle,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const SizedBox(height: 6),
-          Text(l.signUpSubtitle,
-              style: const TextStyle(color: Colors.white70, fontSize: 15)),
+          Text(
+            l.signUpSubtitle,
+            style: const TextStyle(color: Colors.white70, fontSize: 15),
+          ),
           const SizedBox(height: 32),
           _buildField(
-              controller: _nameController,
-              hint: l.nameHint,
-              icon: Icons.person_outlined),
+            controller: _nameController,
+            hint: l.nameHint,
+            icon: Icons.person_outlined,
+          ),
           const SizedBox(height: 14),
           _buildField(
-              controller: _emailController,
-              hint: l.emailHint,
-              icon: Icons.email_outlined,
-              keyboardType: TextInputType.emailAddress),
+            controller: _emailController,
+            hint: l.emailHint,
+            icon: Icons.email_outlined,
+            keyboardType: TextInputType.emailAddress,
+          ),
           const SizedBox(height: 14),
           TextField(
             controller: _passwordController,
@@ -340,8 +384,10 @@ class _RegisterScreenState extends State<RegisterScreen>
               ),
               filled: true,
               fillColor: const Color(0xFF1B2160),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 18,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
                 borderSide: BorderSide.none,
@@ -359,17 +405,25 @@ class _RegisterScreenState extends State<RegisterScreen>
                 foregroundColor: const Color(0xFF1C2363),
                 disabledBackgroundColor: Colors.white38,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14)),
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
               child: _isRegistering
                   ? const SizedBox(
-                      width: 22, height: 22,
+                      width: 22,
+                      height: 22,
                       child: CircularProgressIndicator(
-                          strokeWidth: 2.5, color: Color(0xFF1C2363)),
+                        strokeWidth: 2.5,
+                        color: Color(0xFF1C2363),
+                      ),
                     )
-                  : const Text('Continue →',
+                  : const Text(
+                      'Continue →',
                       style: TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.w600)),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
             ),
           ),
           const SizedBox(height: 20),
@@ -394,8 +448,10 @@ class _RegisterScreenState extends State<RegisterScreen>
         prefixIcon: Icon(icon, color: Colors.white54),
         filled: true,
         fillColor: const Color(0xFF1B2160),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 18,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,
@@ -418,9 +474,10 @@ class _RegisterScreenState extends State<RegisterScreen>
               Text(
                 'Choose Your Plan',
                 style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold),
+                  color: Colors.white,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               SizedBox(height: 6),
               Text(
@@ -436,18 +493,18 @@ class _RegisterScreenState extends State<RegisterScreen>
               ? ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   itemCount: 3,
-                  itemBuilder: (_, __) => Padding(
+                  itemBuilder: (_, _) => Padding(
                     padding: const EdgeInsets.only(bottom: 14),
                     child: _shimmerBox(height: 130, radius: 18),
                   ),
                 )
               : _plans.isEmpty
-                  ? _buildNoPlans()
-                  : ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
-                      itemCount: _plans.length,
-                      itemBuilder: (_, i) => _buildPlanTile(_plans[i], i),
-                    ),
+              ? _buildNoPlans()
+              : ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+                  itemCount: _plans.length,
+                  itemBuilder: (_, i) => _buildPlanTile(_plans[i], i),
+                ),
         ),
         // ── Sticky bottom buttons ──
         Container(
@@ -456,7 +513,7 @@ class _RegisterScreenState extends State<RegisterScreen>
             color: const Color(0xFF1C2363),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withValues(alpha: 0.3),
                 blurRadius: 16,
                 offset: const Offset(0, -4),
               ),
@@ -473,21 +530,30 @@ class _RegisterScreenState extends State<RegisterScreen>
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF5C3BFF),
                     foregroundColor: Colors.white,
-                    disabledBackgroundColor:
-                        const Color(0xFF5C3BFF).withOpacity(0.4),
+                    disabledBackgroundColor: const Color(
+                      0xFF5C3BFF,
+                    ).withValues(alpha: 0.4),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14)),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                     elevation: 0,
                   ),
                   child: _subscribing
                       ? const SizedBox(
-                          width: 22, height: 22,
+                          width: 22,
+                          height: 22,
                           child: CircularProgressIndicator(
-                              strokeWidth: 2.5, color: Colors.white),
+                            strokeWidth: 2.5,
+                            color: Colors.white,
+                          ),
                         )
-                      : const Text('Get Started 🚀',
+                      : const Text(
+                          'Get Started 🚀',
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w600)),
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 10),
@@ -509,16 +575,16 @@ class _RegisterScreenState extends State<RegisterScreen>
     final id = plan['id']?.toString() ?? '';
     final name = plan['name']?.toString() ?? 'Plan';
     final price = double.tryParse(plan['price']?.toString() ?? '0') ?? 0;
-    int _safeInt(dynamic v, int fb) =>
+    int safeInt(dynamic v, int fb) =>
         v == null ? fb : (v is int ? v : int.tryParse(v.toString()) ?? fb);
-    final days = _safeInt(plan['duration_days'], 30);
-    final devices = _safeInt(plan['max_devices'], 1);
+    final days = safeInt(plan['duration_days'], 30);
+    final devices = safeInt(plan['max_devices'], 1);
     final description = plan['description']?.toString();
     final String billingLabel = days >= 365
         ? '/year'
         : days >= 28
-            ? '/month'
-            : ' for $days days';
+        ? '/month'
+        : ' for $days days';
     final bool isSelected = _selectedPlanId == id;
     final bool isRecommended = index == _recommendedIndex();
 
@@ -541,14 +607,14 @@ class _RegisterScreenState extends State<RegisterScreen>
             color: isSelected
                 ? const Color(0xFF8A6FFF)
                 : isRecommended
-                    ? const Color(0xFF5C3BFF).withOpacity(0.5)
-                    : Colors.white12,
+                ? const Color(0xFF5C3BFF).withValues(alpha: 0.5)
+                : Colors.white12,
             width: isSelected ? 1.5 : 1,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: const Color(0xFF5C3BFF).withOpacity(0.4),
+                    color: const Color(0xFF5C3BFF).withValues(alpha: 0.4),
                     blurRadius: 20,
                     offset: const Offset(0, 6),
                   ),
@@ -562,7 +628,8 @@ class _RegisterScreenState extends State<RegisterScreen>
                 // Selection indicator
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  width: 24, height: 24,
+                  width: 24,
+                  height: 24,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: isSelected
@@ -587,26 +654,35 @@ class _RegisterScreenState extends State<RegisterScreen>
                     children: [
                       Row(
                         children: [
-                          Text(_planIcon(name),
-                              style: const TextStyle(fontSize: 20)),
+                          Text(
+                            _planIcon(name),
+                            style: const TextStyle(fontSize: 20),
+                          ),
                           const SizedBox(width: 8),
                           Flexible(
-                            child: Text(name,
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                                overflow: TextOverflow.ellipsis),
+                            child: Text(
+                              name,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       ),
                       if (description != null && description.isNotEmpty) ...[
                         const SizedBox(height: 3),
-                        Text(description,
-                            style: const TextStyle(
-                                color: Colors.white60, fontSize: 12),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis),
+                        Text(
+                          description,
+                          style: const TextStyle(
+                            color: Colors.white60,
+                            fontSize: 12,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ],
                       const SizedBox(height: 8),
                       Wrap(
@@ -625,9 +701,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      price == 0
-                          ? 'Free'
-                          : '\$${price.toStringAsFixed(2)}',
+                      price == 0 ? 'Free' : '\$${price.toStringAsFixed(2)}',
                       style: TextStyle(
                         color: price == 0
                             ? const Color(0xFF00E5A0)
@@ -637,9 +711,13 @@ class _RegisterScreenState extends State<RegisterScreen>
                       ),
                     ),
                     if (price > 0)
-                      Text(billingLabel,
-                          style: const TextStyle(
-                              color: Colors.white54, fontSize: 11)),
+                      Text(
+                        billingLabel,
+                        style: const TextStyle(
+                          color: Colors.white54,
+                          fontSize: 11,
+                        ),
+                      ),
                   ],
                 ),
               ],
@@ -647,10 +725,13 @@ class _RegisterScreenState extends State<RegisterScreen>
             // Recommended badge
             if (isRecommended)
               Positioned(
-                top: 0, right: 0,
+                top: 0,
+                right: 0,
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 3,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFF00E5A0),
                     borderRadius: BorderRadius.circular(20),
@@ -676,11 +757,13 @@ class _RegisterScreenState extends State<RegisterScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text(label,
-          style: const TextStyle(color: Colors.white70, fontSize: 10)),
+      child: Text(
+        label,
+        style: const TextStyle(color: Colors.white70, fontSize: 10),
+      ),
     );
   }
 
@@ -689,18 +772,20 @@ class _RegisterScreenState extends State<RegisterScreen>
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.wifi_off_rounded,
-              color: Colors.white24, size: 56),
+          const Icon(Icons.wifi_off_rounded, color: Colors.white24, size: 56),
           const SizedBox(height: 16),
-          const Text('Could not load plans',
-              style: TextStyle(color: Colors.white54, fontSize: 16)),
+          const Text(
+            'Could not load plans',
+            style: TextStyle(color: Colors.white54, fontSize: 16),
+          ),
           const SizedBox(height: 12),
           TextButton.icon(
             onPressed: _fetchPlans,
-            icon: const Icon(Icons.refresh_rounded,
-                color: Color(0xFF5C3BFF)),
-            label: const Text('Retry',
-                style: TextStyle(color: Color(0xFF5C3BFF))),
+            icon: const Icon(Icons.refresh_rounded, color: Color(0xFF5C3BFF)),
+            label: const Text(
+              'Retry',
+              style: TextStyle(color: Color(0xFF5C3BFF)),
+            ),
           ),
         ],
       ),
@@ -713,8 +798,7 @@ class _RegisterScreenState extends State<RegisterScreen>
 class _StepProgressBar extends StatelessWidget {
   final int currentStep;
   final int totalSteps;
-  const _StepProgressBar(
-      {required this.currentStep, required this.totalSteps});
+  const _StepProgressBar({required this.currentStep, required this.totalSteps});
 
   @override
   Widget build(BuildContext context) {
@@ -727,9 +811,7 @@ class _StepProgressBar extends StatelessWidget {
             margin: EdgeInsets.only(right: i < totalSteps - 1 ? 6 : 0),
             height: 4,
             decoration: BoxDecoration(
-              color: active
-                  ? const Color(0xFF5C3BFF)
-                  : Colors.white12,
+              color: active ? const Color(0xFF5C3BFF) : Colors.white12,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -749,8 +831,11 @@ class _LanguageToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        MyApp.of(context)
-            .setLocale(isZh ? const Locale('en') : const Locale('zh'));
+        final newLang = isZh ? 'en' : 'zh';
+        SettingsService.setString(SettingsService.languageKey, newLang);
+        MyApp.of(
+          context,
+        ).setLocale(Locale(newLang));
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
@@ -759,17 +844,24 @@ class _LanguageToggle extends StatelessWidget {
           color: const Color(0xFF1B2160),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-              color: const Color(0xFF5C3BFF).withOpacity(0.5)),
+            color: const Color(0xFF5C3BFF).withValues(alpha: 0.5),
+          ),
         ),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Text(isZh ? '中' : 'EN',
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              isZh ? '中' : 'EN',
               style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700)),
-          const SizedBox(width: 6),
-          const Icon(Icons.language_rounded, color: Colors.white70, size: 16),
-        ]),
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(width: 6),
+            const Icon(Icons.language_rounded, color: Colors.white70, size: 16),
+          ],
+        ),
       ),
     );
   }

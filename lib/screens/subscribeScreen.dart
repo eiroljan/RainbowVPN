@@ -15,7 +15,7 @@ class _SubscribeScreenState extends State<SubscribeScreen>
   bool _loadingSubscription = true;
   List<Map<String, dynamic>> _plans = [];
   Map<String, dynamic>? _currentSubscription;
-  String? _processingPlanId;   // store as String for safe comparison
+  String? _processingPlanId; // store as String for safe comparison
   bool _cancellingSubscription = false;
 
   late AnimationController _shimmerController;
@@ -93,11 +93,12 @@ class _SubscribeScreenState extends State<SubscribeScreen>
       if (!mounted) return;
       if (result.containsKey('subscription')) {
         setState(() {
-          _currentSubscription =
-              result['subscription'] as Map<String, dynamic>;
+          _currentSubscription = result['subscription'] as Map<String, dynamic>;
         });
-        _showSnack('✅ ${result['message'] ?? 'Subscribed successfully!'}',
-            success: true);
+        _showSnack(
+          '✅ ${result['message'] ?? 'Subscribed successfully!'}',
+          success: true,
+        );
       } else {
         _showSnack(result['message'] ?? 'Subscription failed.');
       }
@@ -113,12 +114,10 @@ class _SubscribeScreenState extends State<SubscribeScreen>
       context: context,
       builder: (_) => AlertDialog(
         backgroundColor: const Color(0xFF1B2160),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text(
           'Cancel Subscription',
-          style:
-              TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         content: const Text(
           'Are you sure you want to cancel your current subscription?',
@@ -127,16 +126,19 @@ class _SubscribeScreenState extends State<SubscribeScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Keep Plan',
-                style: TextStyle(color: Colors.white54)),
+            child: const Text(
+              'Keep Plan',
+              style: TextStyle(color: Colors.white54),
+            ),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             child: const Text(
               'Cancel Plan',
               style: TextStyle(
-                  color: Color(0xFFFF5C5C),
-                  fontWeight: FontWeight.bold),
+                color: Color(0xFFFF5C5C),
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -150,8 +152,10 @@ class _SubscribeScreenState extends State<SubscribeScreen>
       if (!mounted) return;
       if (result.containsKey('subscription')) {
         setState(() => _currentSubscription = null);
-        _showSnack(result['message'] ?? 'Subscription cancelled.',
-            success: true);
+        _showSnack(
+          result['message'] ?? 'Subscription cancelled.',
+          success: true,
+        );
       } else {
         _showSnack(result['message'] ?? 'Failed to cancel.');
       }
@@ -166,11 +170,11 @@ class _SubscribeScreenState extends State<SubscribeScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg, style: const TextStyle(color: Colors.white)),
-        backgroundColor:
-            success ? const Color(0xFF1A3A2A) : const Color(0xFF3A1A1A),
+        backgroundColor: success
+            ? const Color(0xFF1A3A2A)
+            : const Color(0xFF3A1A1A),
         behavior: SnackBarBehavior.floating,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
       ),
     );
@@ -218,7 +222,10 @@ class _SubscribeScreenState extends State<SubscribeScreen>
             child: Transform.rotate(
               angle: -0.3,
               child: Container(
-                  width: 220, height: 450, color: const Color(0xFF5C3BFF)),
+                width: 220,
+                height: 450,
+                color: const Color(0xFF5C3BFF),
+              ),
             ),
           ),
           Positioned(
@@ -227,7 +234,10 @@ class _SubscribeScreenState extends State<SubscribeScreen>
             child: Transform.rotate(
               angle: 0.1,
               child: Container(
-                  width: 180, height: 300, color: const Color(0xFF6A40FF)),
+                width: 180,
+                height: 300,
+                color: const Color(0xFF6A40FF),
+              ),
             ),
           ),
           Positioned(
@@ -236,7 +246,10 @@ class _SubscribeScreenState extends State<SubscribeScreen>
             child: Transform.rotate(
               angle: -0.4,
               child: Container(
-                  width: 180, height: 300, color: const Color(0xFF182056)),
+                width: 180,
+                height: 300,
+                color: const Color(0xFF182056),
+              ),
             ),
           ),
 
@@ -247,14 +260,17 @@ class _SubscribeScreenState extends State<SubscribeScreen>
                 // ── Top bar ──
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 20, vertical: 16),
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
                   child: Row(
                     children: [
                       IconButton(
                         icon: const Icon(
-                            Icons.arrow_back_ios_new_rounded,
-                            color: Colors.white,
-                            size: 22),
+                          Icons.arrow_back_ios_new_rounded,
+                          color: Colors.white,
+                          size: 22,
+                        ),
                         onPressed: () => Navigator.pop(context),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
@@ -274,7 +290,9 @@ class _SubscribeScreenState extends State<SubscribeScreen>
                           Text(
                             'Upgrade for premium access',
                             style: TextStyle(
-                                color: Colors.white54, fontSize: 13),
+                              color: Colors.white54,
+                              fontSize: 13,
+                            ),
                           ),
                         ],
                       ),
@@ -295,8 +313,8 @@ class _SubscribeScreenState extends State<SubscribeScreen>
                   child: _loadingPlans
                       ? _buildShimmerList()
                       : _plans.isEmpty
-                          ? _buildEmpty()
-                          : _buildPlanList(),
+                      ? _buildEmpty()
+                      : _buildPlanList(),
                 ),
               ],
             ),
@@ -319,17 +337,18 @@ class _SubscribeScreenState extends State<SubscribeScreen>
         width: double.infinity,
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.07),
+          color: Colors.white.withValues(alpha: 0.07),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: Colors.white12),
         ),
         child: const Row(
           children: [
-            Icon(Icons.info_outline_rounded,
-                color: Colors.white54, size: 20),
+            Icon(Icons.info_outline_rounded, color: Colors.white54, size: 20),
             SizedBox(width: 10),
-            Text('No active subscription',
-                style: TextStyle(color: Colors.white70, fontSize: 14)),
+            Text(
+              'No active subscription',
+              style: TextStyle(color: Colors.white70, fontSize: 14),
+            ),
           ],
         ),
       );
@@ -338,8 +357,9 @@ class _SubscribeScreenState extends State<SubscribeScreen>
     final plan = sub['plan'] as Map<String, dynamic>?;
     final planName = plan?['name'] ?? 'Plan';
     final expiresAt = sub['expires_at'] as String?;
-    final expiresLabel =
-        expiresAt != null ? 'Expires ${_formatDate(expiresAt)}' : 'Active';
+    final expiresLabel = expiresAt != null
+        ? 'Expires ${_formatDate(expiresAt)}'
+        : 'Active';
 
     return Container(
       width: double.infinity,
@@ -353,7 +373,7 @@ class _SubscribeScreenState extends State<SubscribeScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF00C77A).withOpacity(0.3),
+            color: const Color(0xFF00C77A).withValues(alpha: 0.3),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -361,8 +381,7 @@ class _SubscribeScreenState extends State<SubscribeScreen>
       ),
       child: Row(
         children: [
-          const Icon(Icons.check_circle_rounded,
-              color: Colors.white, size: 26),
+          const Icon(Icons.check_circle_rounded, color: Colors.white, size: 26),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -371,13 +390,15 @@ class _SubscribeScreenState extends State<SubscribeScreen>
                 Text(
                   'Active — $planName',
                   style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
                 ),
-                Text(expiresLabel,
-                    style: const TextStyle(
-                        color: Colors.white70, fontSize: 13)),
+                Text(
+                  expiresLabel,
+                  style: const TextStyle(color: Colors.white70, fontSize: 13),
+                ),
               ],
             ),
           ),
@@ -386,23 +407,28 @@ class _SubscribeScreenState extends State<SubscribeScreen>
                   width: 20,
                   height: 20,
                   child: CircularProgressIndicator(
-                      strokeWidth: 2, color: Colors.white),
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
                 )
               : GestureDetector(
                   onTap: _cancelSubscription,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 6),
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Text(
                       'Cancel',
                       style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600),
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -435,7 +461,7 @@ class _SubscribeScreenState extends State<SubscribeScreen>
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
       itemCount: 3,
-      itemBuilder: (_, __) => Padding(
+      itemBuilder: (_, _) => Padding(
         padding: const EdgeInsets.only(bottom: 16),
         child: _shimmerBox(height: 190, radius: 20),
       ),
@@ -445,7 +471,7 @@ class _SubscribeScreenState extends State<SubscribeScreen>
   Widget _shimmerBox({required double height, double radius = 12}) {
     return AnimatedBuilder(
       animation: _shimmerController,
-      builder: (_, __) {
+      builder: (_, _) {
         return Container(
           height: height,
           decoration: BoxDecoration(
@@ -475,11 +501,12 @@ class _SubscribeScreenState extends State<SubscribeScreen>
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.wifi_off_rounded,
-              color: Colors.white24, size: 60),
+          const Icon(Icons.wifi_off_rounded, color: Colors.white24, size: 60),
           const SizedBox(height: 16),
-          const Text('No plans available',
-              style: TextStyle(color: Colors.white54, fontSize: 16)),
+          const Text(
+            'No plans available',
+            style: TextStyle(color: Colors.white54, fontSize: 16),
+          ),
           const SizedBox(height: 12),
           TextButton.icon(
             onPressed: () {
@@ -489,10 +516,11 @@ class _SubscribeScreenState extends State<SubscribeScreen>
               });
               _loadData();
             },
-            icon: const Icon(Icons.refresh_rounded,
-                color: Color(0xFF5C3BFF)),
-            label: const Text('Retry',
-                style: TextStyle(color: Color(0xFF5C3BFF))),
+            icon: const Icon(Icons.refresh_rounded, color: Color(0xFF5C3BFF)),
+            label: const Text(
+              'Retry',
+              style: TextStyle(color: Color(0xFF5C3BFF)),
+            ),
           ),
         ],
       ),
@@ -537,13 +565,14 @@ class _PlanCard extends StatelessWidget {
     final name = plan['name']?.toString() ?? 'Plan';
     final price = double.tryParse(plan['price']?.toString() ?? '0') ?? 0;
     // Safe int parsing — Supabase may return these as int or String
-    int _parseInt(dynamic v, int fallback) =>
-        v == null ? fallback : (v is int ? v : int.tryParse(v.toString()) ?? fallback);
-    final duration = _parseInt(plan['duration_days'], 30);
+    int parseInt(dynamic v, int fallback) => v == null
+        ? fallback
+        : (v is int ? v : int.tryParse(v.toString()) ?? fallback);
+    final duration = parseInt(plan['duration_days'], 30);
     final description = plan['description']?.toString();
     final bandwidthRaw = plan['bandwidth_gb'];
-    final bandwidth = bandwidthRaw == null ? null : _parseInt(bandwidthRaw, 0);
-    final maxDevices = _parseInt(plan['max_devices'], 1);
+    final bandwidth = bandwidthRaw == null ? null : parseInt(bandwidthRaw, 0);
+    final maxDevices = parseInt(plan['max_devices'], 1);
 
     final String billingLabel;
     if (duration >= 365) {
@@ -588,18 +617,17 @@ class _PlanCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: isRecommended && !isCurrentPlan
-                    ? const Color(0xFF8A6FFF).withOpacity(0.6)
+                    ? const Color(0xFF8A6FFF).withValues(alpha: 0.6)
                     : Colors.white12,
                 width: isRecommended ? 1.5 : 1,
               ),
               boxShadow: isRecommended
                   ? [
                       BoxShadow(
-                        color:
-                            const Color(0xFF5C3BFF).withOpacity(0.35),
+                        color: const Color(0xFF5C3BFF).withValues(alpha: 0.35),
                         blurRadius: 24,
                         offset: const Offset(0, 8),
-                      )
+                      ),
                     ]
                   : [],
             ),
@@ -642,13 +670,13 @@ class _PlanCard extends StatelessWidget {
                               if (price > 0) ...[
                                 const SizedBox(width: 4),
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.only(bottom: 2),
+                                  padding: const EdgeInsets.only(bottom: 2),
                                   child: Text(
                                     billingLabel,
                                     style: const TextStyle(
-                                        color: Colors.white54,
-                                        fontSize: 13),
+                                      color: Colors.white54,
+                                      fontSize: 13,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -671,15 +699,19 @@ class _PlanCard extends StatelessWidget {
                     child: Row(
                       children: [
                         const Icon(
-                            Icons.check_circle_outline_rounded,
-                            color: Color(0xFF00E5A0),
-                            size: 16),
+                          Icons.check_circle_outline_rounded,
+                          color: Color(0xFF00E5A0),
+                          size: 16,
+                        ),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: Text(f,
-                              style: const TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 13)),
+                          child: Text(
+                            f,
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 13,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -698,36 +730,37 @@ class _PlanCard extends StatelessWidget {
                         : onSubscribe,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: isCurrentPlan
-                          ? Colors.white.withOpacity(0.15)
+                          ? Colors.white.withValues(alpha: 0.15)
                           : isRecommended
-                              ? Colors.white
-                              : Colors.white.withOpacity(0.12),
-                      foregroundColor:
-                          isRecommended && !isCurrentPlan
-                              ? const Color(0xFF3B20CC)
-                              : Colors.white,
-                      disabledBackgroundColor:
-                          Colors.white.withOpacity(0.1),
+                          ? Colors.white
+                          : Colors.white.withValues(alpha: 0.12),
+                      foregroundColor: isRecommended && !isCurrentPlan
+                          ? const Color(0xFF3B20CC)
+                          : Colors.white,
+                      disabledBackgroundColor: Colors.white.withValues(
+                        alpha: 0.1,
+                      ),
                       disabledForegroundColor: Colors.white54,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     child: isProcessing
                         ? const SizedBox(
                             width: 20,
                             height: 20,
                             child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white),
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
                           )
                         : Text(
-                            isCurrentPlan
-                                ? '✓ Current Plan'
-                                : 'Get Started',
+                            isCurrentPlan ? '✓ Current Plan' : 'Get Started',
                             style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                   ),
                 ),
@@ -742,7 +775,9 @@ class _PlanCard extends StatelessWidget {
               right: 14,
               child: Container(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 10, vertical: 4),
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFF00E5A0),
                   borderRadius: BorderRadius.circular(20),

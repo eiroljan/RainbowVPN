@@ -36,13 +36,13 @@ class _PaymentSheetState extends State<_PaymentSheet>
 
   final _cardNumberController = TextEditingController();
   final _cardHolderController = TextEditingController();
-  final _expiryController     = TextEditingController();
-  final _cvvController        = TextEditingController();
+  final _expiryController = TextEditingController();
+  final _cvvController = TextEditingController();
 
-  final _cardNumberFocus  = FocusNode();
-  final _cardHolderFocus  = FocusNode();
-  final _expiryFocus      = FocusNode();
-  final _cvvFocus         = FocusNode();
+  final _cardNumberFocus = FocusNode();
+  final _cardHolderFocus = FocusNode();
+  final _expiryFocus = FocusNode();
+  final _cvvFocus = FocusNode();
 
   bool _paying = false;
   bool _cvvObscure = true;
@@ -59,9 +59,11 @@ class _PaymentSheetState extends State<_PaymentSheet>
       vsync: this,
       duration: const Duration(milliseconds: 350),
     );
-    _fadeAnim  = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
-    _slideAnim = Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero)
-        .animate(CurvedAnimation(parent: _animController, curve: Curves.easeOut));
+    _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
+    _slideAnim = Tween<Offset>(
+      begin: const Offset(0, 0.1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _animController, curve: Curves.easeOut));
     _animController.forward();
 
     _cardNumberController.addListener(_detectCardType);
@@ -132,10 +134,10 @@ class _PaymentSheetState extends State<_PaymentSheet>
     final parts = raw.split('/');
     if (parts.length != 2) return 'Enter MM/YY';
     final month = int.tryParse(parts[0]);
-    final year  = int.tryParse(parts[1]);
+    final year = int.tryParse(parts[1]);
     if (month == null || year == null) return 'Enter MM/YY';
     if (month < 1 || month > 12) return 'Invalid month';
-    final now    = DateTime.now();
+    final now = DateTime.now();
     final expiry = DateTime(2000 + year, month + 1);
     if (expiry.isBefore(now)) return 'Card has expired';
     return null;
@@ -192,8 +194,11 @@ class _PaymentSheetState extends State<_PaymentSheet>
                         ),
                         borderRadius: BorderRadius.circular(14),
                       ),
-                      child: const Icon(Icons.credit_card_rounded,
-                          color: Colors.white, size: 22),
+                      child: const Icon(
+                        Icons.credit_card_rounded,
+                        color: Colors.white,
+                        size: 22,
+                      ),
                     ),
                     const SizedBox(width: 14),
                     Expanded(
@@ -211,19 +216,24 @@ class _PaymentSheetState extends State<_PaymentSheet>
                           Text(
                             widget.planName,
                             style: const TextStyle(
-                                color: Colors.white54, fontSize: 13),
+                              color: Colors.white54,
+                              fontSize: 13,
+                            ),
                           ),
                         ],
                       ),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 7),
+                        horizontal: 14,
+                        vertical: 7,
+                      ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF00C77A).withOpacity(0.18),
+                        color: const Color(0xFF00C77A).withValues(alpha: 0.18),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                            color: const Color(0xFF00C77A).withOpacity(0.4)),
+                          color: const Color(0xFF00C77A).withValues(alpha: 0.4),
+                        ),
                       ),
                       child: Text(
                         '\$${widget.amount.toStringAsFixed(2)}',
@@ -279,7 +289,8 @@ class _PaymentSheetState extends State<_PaymentSheet>
                         keyboardType: TextInputType.name,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
-                              RegExp(r'[a-zA-Z\s]')),
+                            RegExp(r'[a-zA-Z\s]'),
+                          ),
                           _UpperCaseFormatter(),
                         ],
                         validator: _validateHolder,
@@ -321,11 +332,10 @@ class _PaymentSheetState extends State<_PaymentSheet>
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
-                              maxLength:
-                                  _cardType == _CardType.amex ? 4 : 3,
+                              maxLength: _cardType == _CardType.amex ? 4 : 3,
                               suffixIcon: GestureDetector(
-                                onTap: () => setState(
-                                    () => _cvvObscure = !_cvvObscure),
+                                onTap: () =>
+                                    setState(() => _cvvObscure = !_cvvObscure),
                                 child: Icon(
                                   _cvvObscure
                                       ? Icons.visibility_off_rounded
@@ -356,20 +366,17 @@ class _PaymentSheetState extends State<_PaymentSheet>
                       shadowColor: Colors.transparent,
                       padding: EdgeInsets.zero,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16)),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                     ),
                     child: Ink(
                       decoration: BoxDecoration(
                         gradient: _paying
-                            ? const LinearGradient(colors: [
-                                Color(0xFF2A3280),
-                                Color(0xFF2A3280),
-                              ])
+                            ? const LinearGradient(
+                                colors: [Color(0xFF2A3280), Color(0xFF2A3280)],
+                              )
                             : const LinearGradient(
-                                colors: [
-                                  Color(0xFF6A4FFF),
-                                  Color(0xFF3B20CC),
-                                ],
+                                colors: [Color(0xFF6A4FFF), Color(0xFF3B20CC)],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
@@ -378,8 +385,9 @@ class _PaymentSheetState extends State<_PaymentSheet>
                             ? []
                             : [
                                 BoxShadow(
-                                  color: const Color(0xFF5C3BFF)
-                                      .withOpacity(0.45),
+                                  color: const Color(
+                                    0xFF5C3BFF,
+                                  ).withValues(alpha: 0.45),
                                   blurRadius: 20,
                                   offset: const Offset(0, 8),
                                 ),
@@ -399,8 +407,11 @@ class _PaymentSheetState extends State<_PaymentSheet>
                             : Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Icon(Icons.lock_rounded,
-                                      color: Colors.white70, size: 16),
+                                  const Icon(
+                                    Icons.lock_rounded,
+                                    color: Colors.white70,
+                                    size: 16,
+                                  ),
                                   const SizedBox(width: 8),
                                   Text(
                                     'Pay \$${widget.amount.toStringAsFixed(2)}',
@@ -424,8 +435,7 @@ class _PaymentSheetState extends State<_PaymentSheet>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
-                    Icon(Icons.shield_rounded,
-                        color: Colors.white38, size: 14),
+                    Icon(Icons.shield_rounded, color: Colors.white38, size: 14),
                     SizedBox(width: 6),
                     Text(
                       'Secured with 256-bit SSL encryption',
@@ -449,8 +459,9 @@ class _PaymentSheetState extends State<_PaymentSheet>
     final holder = _cardHolderController.text.isEmpty
         ? 'YOUR NAME'
         : _cardHolderController.text;
-    final expiry =
-        _expiryController.text.isEmpty ? 'MM/YY' : _expiryController.text;
+    final expiry = _expiryController.text.isEmpty
+        ? 'MM/YY'
+        : _expiryController.text;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
@@ -464,7 +475,7 @@ class _PaymentSheetState extends State<_PaymentSheet>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: _cardGradient().first.withOpacity(0.4),
+            color: _cardGradient().first.withValues(alpha: 0.4),
             blurRadius: 24,
             offset: const Offset(0, 10),
           ),
@@ -481,7 +492,7 @@ class _PaymentSheetState extends State<_PaymentSheet>
               height: 130,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.06),
+                color: Colors.white.withValues(alpha: 0.06),
               ),
             ),
           ),
@@ -493,7 +504,7 @@ class _PaymentSheetState extends State<_PaymentSheet>
               height: 160,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.04),
+                color: Colors.white.withValues(alpha: 0.04),
               ),
             ),
           ),
@@ -507,8 +518,11 @@ class _PaymentSheetState extends State<_PaymentSheet>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Icon(Icons.wifi_rounded,
-                        color: Colors.white54, size: 22),
+                    const Icon(
+                      Icons.wifi_rounded,
+                      color: Colors.white54,
+                      size: 22,
+                    ),
                     _cardNetworkWidget(),
                   ],
                 ),
@@ -536,35 +550,43 @@ class _PaymentSheetState extends State<_PaymentSheet>
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('CARD HOLDER',
-                            style: TextStyle(
-                                color: Colors.white38, fontSize: 9,
-                                letterSpacing: 1)),
+                        const Text(
+                          'CARD HOLDER',
+                          style: TextStyle(
+                            color: Colors.white38,
+                            fontSize: 9,
+                            letterSpacing: 1,
+                          ),
+                        ),
                         Text(
-                          holder.length > 18
-                              ? holder.substring(0, 18)
-                              : holder,
+                          holder.length > 18 ? holder.substring(0, 18) : holder,
                           style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 0.5),
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.5,
+                          ),
                         ),
                       ],
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        const Text('EXPIRES',
-                            style: TextStyle(
-                                color: Colors.white38, fontSize: 9,
-                                letterSpacing: 1)),
+                        const Text(
+                          'EXPIRES',
+                          style: TextStyle(
+                            color: Colors.white38,
+                            fontSize: 9,
+                            letterSpacing: 1,
+                          ),
+                        ),
                         Text(
                           expiry,
                           style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600),
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ],
                     ),
@@ -622,7 +644,7 @@ class _PaymentSheetState extends State<_PaymentSheet>
               height: 28,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.red.withOpacity(0.85),
+                color: Colors.red.withValues(alpha: 0.85),
               ),
             ),
             Transform.translate(
@@ -632,7 +654,7 @@ class _PaymentSheetState extends State<_PaymentSheet>
                 height: 28,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.orange.withOpacity(0.75),
+                  color: Colors.orange.withValues(alpha: 0.75),
                 ),
               ),
             ),
@@ -649,8 +671,11 @@ class _PaymentSheetState extends State<_PaymentSheet>
           ),
         );
       case _CardType.unknown:
-        return const Icon(Icons.credit_card_rounded,
-            color: Colors.white38, size: 26);
+        return const Icon(
+          Icons.credit_card_rounded,
+          color: Colors.white38,
+          size: 26,
+        );
     }
   }
 
@@ -674,7 +699,9 @@ class _PaymentSheetState extends State<_PaymentSheet>
               width: 14,
               height: 14,
               decoration: const BoxDecoration(
-                  shape: BoxShape.circle, color: Colors.red),
+                shape: BoxShape.circle,
+                color: Colors.red,
+              ),
             ),
             Transform.translate(
               offset: const Offset(-5, 0),
@@ -682,7 +709,9 @@ class _PaymentSheetState extends State<_PaymentSheet>
                 width: 14,
                 height: 14,
                 decoration: const BoxDecoration(
-                    shape: BoxShape.circle, color: Colors.orange),
+                  shape: BoxShape.circle,
+                  color: Colors.orange,
+                ),
               ),
             ),
           ],
@@ -726,8 +755,9 @@ class _PaymentSheetState extends State<_PaymentSheet>
       obscureText: obscureText,
       maxLength: maxLength,
       validator: validator,
-      textInputAction:
-          nextFocus != null ? TextInputAction.next : TextInputAction.done,
+      textInputAction: nextFocus != null
+          ? TextInputAction.next
+          : TextInputAction.done,
       onFieldSubmitted: (_) {
         if (nextFocus != null) {
           FocusScope.of(context).requestFocus(nextFocus);
@@ -739,8 +769,7 @@ class _PaymentSheetState extends State<_PaymentSheet>
         labelText: label,
         hintText: hint,
         counterText: '',
-        labelStyle:
-            const TextStyle(color: Colors.white54, fontSize: 13),
+        labelStyle: const TextStyle(color: Colors.white54, fontSize: 13),
         hintStyle: const TextStyle(color: Colors.white24, fontSize: 14),
         prefixIcon: Icon(icon, color: Colors.white38, size: 18),
         suffixIcon: suffixIcon != null
@@ -751,28 +780,24 @@ class _PaymentSheetState extends State<_PaymentSheet>
             : null,
         suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.06),
+        fillColor: Colors.white.withValues(alpha: 0.06),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: Colors.white.withOpacity(0.12)),
+          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.12)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide:
-              const BorderSide(color: Color(0xFF7A5FFF), width: 1.5),
+          borderSide: const BorderSide(color: Color(0xFF7A5FFF), width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide:
-              const BorderSide(color: Color(0xFFFF5C5C), width: 1),
+          borderSide: const BorderSide(color: Color(0xFFFF5C5C), width: 1),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide:
-              const BorderSide(color: Color(0xFFFF5C5C), width: 1.5),
+          borderSide: const BorderSide(color: Color(0xFFFF5C5C), width: 1.5),
         ),
-        errorStyle:
-            const TextStyle(color: Color(0xFFFF7C7C), fontSize: 11),
+        errorStyle: const TextStyle(color: Color(0xFFFF7C7C), fontSize: 11),
       ),
     );
   }
@@ -788,7 +813,9 @@ enum _CardType { unknown, visa, mastercard, amex }
 class _CardNumberFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     var text = newValue.text.replaceAll(' ', '');
     if (text.length > 16) text = text.substring(0, 16);
 
@@ -810,7 +837,9 @@ class _CardNumberFormatter extends TextInputFormatter {
 class _ExpiryFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     var text = newValue.text.replaceAll('/', '');
     if (text.length > 4) text = text.substring(0, 4);
 
@@ -832,7 +861,9 @@ class _ExpiryFormatter extends TextInputFormatter {
 class _UpperCaseFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     return newValue.copyWith(text: newValue.text.toUpperCase());
   }
 }

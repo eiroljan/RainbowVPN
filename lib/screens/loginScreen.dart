@@ -4,6 +4,7 @@ import 'package:vpn_app/screens/registerScreen.dart';
 import 'package:vpn_app/services/auth_service.dart';
 import 'package:vpn_app/main.dart';
 import 'package:vpn_app/screens/connectScreen.dart';
+import 'package:vpn_app/services/settings_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -70,8 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
           SafeArea(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
               child: Column(
                 children: [
                   // ── Language toggle ──────────────────────────────────────
@@ -108,65 +108,73 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text(
                     l.loginSubtitle,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        color: Colors.white70, fontSize: 16),
+                    style: const TextStyle(color: Colors.white70, fontSize: 16),
                   ),
 
                   const Spacer(),
 
                   /// Email field
                   TextField(
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        hintText: l.emailHint,
-                        hintStyle: const TextStyle(color: Colors.white54),
-                        prefixIcon: const Icon(Icons.email_outlined,
-                            color: Colors.white54),
-                        filled: true,
-                        fillColor: const Color(0xFF1B2160),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 18),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14),
-                          borderSide: BorderSide.none,
-                        ),
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: l.emailHint,
+                      hintStyle: const TextStyle(color: Colors.white54),
+                      prefixIcon: const Icon(
+                        Icons.email_outlined,
+                        color: Colors.white54,
+                      ),
+                      filled: true,
+                      fillColor: const Color(0xFF1B2160),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 18,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: BorderSide.none,
                       ),
                     ),
+                  ),
 
                   const SizedBox(height: 16),
 
                   /// Password field
                   TextField(
-                      controller: _passwordController,
-                      obscureText: _obscurePassword,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        hintText: l.passwordHint,
-                        hintStyle: const TextStyle(color: Colors.white54),
-                        prefixIcon: const Icon(Icons.lock_outline,
-                            color: Colors.white54),
-                        suffixIcon: GestureDetector(
-                          onTap: () => setState(
-                              () => _obscurePassword = !_obscurePassword),
-                          child: Icon(
-                            _obscurePassword
-                                ? Icons.visibility_off_outlined
-                                : Icons.visibility_outlined,
-                            color: Colors.white54,
-                          ),
+                    controller: _passwordController,
+                    obscureText: _obscurePassword,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: l.passwordHint,
+                      hintStyle: const TextStyle(color: Colors.white54),
+                      prefixIcon: const Icon(
+                        Icons.lock_outline,
+                        color: Colors.white54,
+                      ),
+                      suffixIcon: GestureDetector(
+                        onTap: () => setState(
+                          () => _obscurePassword = !_obscurePassword,
                         ),
-                        filled: true,
-                        fillColor: const Color(0xFF1B2160),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 18),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14),
-                          borderSide: BorderSide.none,
+                        child: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                          color: Colors.white54,
                         ),
                       ),
+                      filled: true,
+                      fillColor: const Color(0xFF1B2160),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 18,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
+                  ),
 
                   const SizedBox(height: 10),
 
@@ -176,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(
                       l.forgotPassword,
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
+                        color: Colors.white.withValues(alpha: 0.7),
                         fontSize: 14,
                       ),
                     ),
@@ -190,28 +198,38 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 56,
                     child: ElevatedButton(
                       onPressed: () async {
-                          final email = _emailController.text.trim();
-                          final password = _passwordController.text;
-                          if (email.isEmpty || password.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Please enter email and password')),
-                            );
-                            return;
-                          }
-                          final result = await AuthService.login(email: email, password: password);
-                          if (result.containsKey('token')) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (_) => const ConnectScreen()),
-                            );
-                          } else {
-                            final errorMsg = result['message'] ??
-                                (result['errors'] != null ? result['errors'].values.first[0] : 'Login failed');
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(errorMsg)),
-                            );
-                          }
-                        },
+                        final email = _emailController.text.trim();
+                        final password = _passwordController.text;
+                        if (email.isEmpty || password.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please enter email and password'),
+                            ),
+                          );
+                          return;
+                        }
+                        final result = await AuthService.login(
+                          email: email,
+                          password: password,
+                        );
+                        if (result.containsKey('token')) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const ConnectScreen(),
+                            ),
+                          );
+                        } else {
+                          final errorMsg =
+                              result['message'] ??
+                              (result['errors'] != null
+                                  ? result['errors'].values.first[0]
+                                  : 'Login failed');
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text(errorMsg)));
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: const Color(0xFF1C2363),
@@ -233,29 +251,33 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   /// Sign-up link
                   GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const RegisterScreen()),
-                        );
-                      },
-                      child: RichText(
-                        text: TextSpan(
-                          style: const TextStyle(
-                              color: Colors.white70, fontSize: 15),
-                          children: [
-                            TextSpan(text: l.noAccount),
-                            TextSpan(
-                              text: l.signUp,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const RegisterScreen(),
                         ),
+                      );
+                    },
+                    child: RichText(
+                      text: TextSpan(
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 15,
+                        ),
+                        children: [
+                          TextSpan(text: l.noAccount),
+                          TextSpan(
+                            text: l.signUp,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+                  ),
 
                   const SizedBox(height: 30),
                 ],
@@ -266,6 +288,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -286,19 +309,20 @@ class _LanguageToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        MyApp.of(context).setLocale(
-          isZh ? const Locale('en') : const Locale('zh'),
-        );
+        final newLang = isZh ? 'en' : 'zh';
+        SettingsService.setString(SettingsService.languageKey, newLang);
+        MyApp.of(
+          context,
+        ).setLocale(Locale(newLang));
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        padding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
         decoration: BoxDecoration(
           color: const Color(0xFF1B2160),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: const Color(0xFF5C3BFF).withOpacity(0.5),
+            color: const Color(0xFF5C3BFF).withValues(alpha: 0.5),
           ),
         ),
         child: Row(
@@ -314,8 +338,7 @@ class _LanguageToggle extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 6),
-            const Icon(Icons.language_rounded,
-                color: Colors.white70, size: 16),
+            const Icon(Icons.language_rounded, color: Colors.white70, size: 16),
           ],
         ),
       ),

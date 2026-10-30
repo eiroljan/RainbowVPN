@@ -6,6 +6,8 @@ import 'package:vpn_app/screens/welcomeScreen.dart';
 import 'package:vpn_app/screens/connectScreen.dart';
 import 'package:vpn_app/services/auth_service.dart';
 import 'package:vpn_app/services/notification_service.dart';
+import 'package:vpn_app/services/settings_service.dart';
+import 'package:vpn_app/screens/profileScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,11 +19,13 @@ void main() async {
   );
 
   await NotificationService.initialize();
-  runApp(const MyApp());
+  final settings = await SettingsService.load();
+  runApp(MyApp(initialLocale: Locale(settings.language)));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final Locale? initialLocale;
+  const MyApp({super.key, this.initialLocale});
 
   @override
   State<MyApp> createState() => MyAppState();
@@ -32,7 +36,13 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  Locale _locale = const Locale('en');
+  late Locale _locale;
+
+  @override
+  void initState() {
+    super.initState();
+    _locale = widget.initialLocale ?? const Locale('en');
+  }
 
   void setLocale(Locale locale) => setState(() => _locale = locale);
 
@@ -53,6 +63,9 @@ class MyAppState extends State<MyApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       home: const SplashScreen(),
+      routes: {
+        '/profile': (context) => const ProfileScreen(),
+      },
     );
   }
 }
@@ -105,9 +118,9 @@ class _SplashScreenState extends State<SplashScreen>
 
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
-        pageBuilder: (_, __, ___) =>
+        pageBuilder: (_, _, _) =>
             loggedIn ? const ConnectScreen() : const WelcomeScreen(),
-        transitionsBuilder: (_, animation, __, child) =>
+        transitionsBuilder: (_, animation, _, child) =>
             FadeTransition(opacity: animation, child: child),
         transitionDuration: const Duration(milliseconds: 400),
       ),
@@ -150,7 +163,7 @@ class _SplashScreenState extends State<SplashScreen>
             right: -50,
             child: Transform.rotate(
               angle: -0.4,
-              child: Container(width: 180, height: 300),
+              child: SizedBox(width: 180, height: 300),
             ),
           ),
 
